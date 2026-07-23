@@ -4,14 +4,14 @@ using UnityEngine.InputSystem;
 namespace Blocks
 {
     [RequireComponent(typeof(BlockPlacement),
-        typeof(Rigidbody),
-        typeof(InputActionMap))]
+        typeof(Rigidbody))]
 
     public class BlockMovement : MonoBehaviour
     {
         [Header("Input Actions")]
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference rotateAction;
+        [SerializeField] private InputActionReference dropAction;
 
         [Header("Physics Settings")]
         [SerializeField] private float moveForce = 10f;
@@ -21,7 +21,6 @@ namespace Blocks
         [SerializeField] private float stabilizeFactor = 0.5f;
         
         private Rigidbody _rb;
-        private BlockPlacement _placementScript;
 
         //inputs
         private Vector2 _moveInput;
@@ -30,12 +29,11 @@ namespace Blocks
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            _placementScript = GetComponent<BlockPlacement>();
         }
 
         private void Update()
         {
-            if (_placementScript.BlockIsStationary)
+            if (dropAction.action.triggered)
             {
                 // Turn off the input listening for this specific block
                 moveAction.action.Disable();

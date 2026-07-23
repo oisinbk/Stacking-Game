@@ -11,6 +11,7 @@ namespace Blocks
         
         private bool _blockIsStationary;
         public bool BlockIsStationary => _blockIsStationary;
+        
 
         private void OnCollisionEnter(Collision other)
         {

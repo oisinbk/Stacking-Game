@@ -10,7 +10,7 @@ namespace Blocks
         
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Block") && gameOverChannel != null)
+            if (other.gameObject.CompareTag("Ground") && gameOverChannel != null)
             {
                 gameOverChannel.RaiseEvent(); 
             }

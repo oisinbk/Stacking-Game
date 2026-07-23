@@ -8,7 +8,7 @@ namespace Pooling
     [Serializable]
     public struct BlockData
     {
-        public Mesh mesh;
+        public MeshFilter meshFilter;
         public Material material;
     }
     
@@ -21,6 +21,11 @@ namespace Pooling
         [SerializeField] private List<BlockData> legalObjects;
         [SerializeField] private BlockPool blockPool;
 
+        private void Start()
+        {
+            GenerateNewBlock(0f);
+        }
+
         private void GenerateNewBlock(float topPoint)
         {
             if (legalObjects == null || legalObjects.Count == 0) return;
@@ -32,7 +37,7 @@ namespace Pooling
             
             if (currentBlockPlacement.TryGetComponent<MeshFilter>(out var filter))
             {
-                filter.sharedMesh = selectedBlock.mesh;
+                filter.sharedMesh = selectedBlock.meshFilter.mesh;
             }
 
             if (currentBlockPlacement.TryGetComponent<MeshRenderer>(out var renderer))
@@ -45,7 +50,7 @@ namespace Pooling
                 collider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
             }
             
-            collider.sharedMesh = selectedBlock.mesh;
+            collider.sharedMesh = selectedBlock.meshFilter.sharedMesh;
             collider.convex = true;
         }
         
