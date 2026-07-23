@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System;
+using Pooling;
 
 [RequireComponent(typeof(MeshCollider), typeof(Rigidbody))]
-public class Block : MonoBehaviour
+public class Block : MonoBehaviour, IPoolable
 {
     [Tooltip("lower the center of mass of the block by this factor")]
     [SerializeField] private float stabilizeFactor = 0.5f;
@@ -36,5 +37,10 @@ public class Block : MonoBehaviour
         _rb.centerOfMass = transform.position + Vector3.down * stabilizeFactor;
         blockPlacingChannel.RaiseEvent(transform.position.y);
         //TODO: update the most top point of the block instead of the center of it
+    }
+
+    public void Reset()
+    {
+        transform.position = Vector3.zero;
     }
 }
