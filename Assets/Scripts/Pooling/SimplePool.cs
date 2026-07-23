@@ -8,12 +8,16 @@ namespace Pooling
         [SerializeField] private T prefab;
         [SerializeField] private int size;
     
+        [Header("Settings")]
+        [SerializeField] private int originalSize = 5;
+        [SerializeField] private int increaseSize = 5;
+        
         private readonly Stack<T> _available = new();
         private readonly HashSet<T> _inUse = new();
 
         private void Awake()
         {
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < originalSize; i++)
             {
                 var instance =  Instantiate(prefab, parent: transform);
                 Return(instance);
@@ -44,7 +48,7 @@ namespace Pooling
                 Return(instance);
             }
 
-            size *= 2;
+            size += increaseSize;
         }
 
         public void Return(T obj)
