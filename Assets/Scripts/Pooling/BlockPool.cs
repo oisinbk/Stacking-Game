@@ -1,6 +1,8 @@
-﻿namespace Pooling
+﻿using Blocks;
+
+namespace Pooling
 {
-    public class BlockPool : SimplePool<Block>
+    public class BlockPool : SimplePool<BlockPlacement>
     {
         
     }

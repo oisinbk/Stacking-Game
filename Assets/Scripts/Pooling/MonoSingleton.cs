@@ -14,7 +14,7 @@ namespace Pooling
                 if (_instance != null)
                     return _instance;
 
-                _instance = FindFirstObjectByType<T>();
+                _instance = FindAnyObjectByType<T>();
                 if (_instance == null)
                 {
                     var singletonObject = new GameObject(typeof(T).Name);

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Blocks;
 
 namespace Pooling
 {
@@ -27,22 +27,22 @@ namespace Pooling
             int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
             BlockData selectedBlock = legalObjects[randomIndex];
             
-            Block currentBlock = blockPool.Get();
-            currentBlock.transform.position = mainCamera.position + cameraOffset;
+            BlockPlacement currentBlockPlacement = blockPool.Get();
+            currentBlockPlacement.transform.position = mainCamera.position + cameraOffset;
             
-            if (currentBlock.TryGetComponent<MeshFilter>(out var filter))
+            if (currentBlockPlacement.TryGetComponent<MeshFilter>(out var filter))
             {
                 filter.sharedMesh = selectedBlock.mesh;
             }
 
-            if (currentBlock.TryGetComponent<MeshRenderer>(out var renderer))
+            if (currentBlockPlacement.TryGetComponent<MeshRenderer>(out var renderer))
             {
                 renderer.sharedMaterial = selectedBlock.material;
             }
 
-            if (!currentBlock.TryGetComponent<MeshCollider>(out var collider))
+            if (!currentBlockPlacement.TryGetComponent<MeshCollider>(out var collider))
             {
-                collider = currentBlock.gameObject.AddComponent<MeshCollider>();
+                collider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
             }
             
             collider.sharedMesh = selectedBlock.mesh;
