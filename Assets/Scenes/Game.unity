@@ -590,8 +590,8 @@ GameObject:
   - component: {fileID: 474037280}
   - component: {fileID: 474037279}
   m_Layer: 0
-  m_Name: Bottom
-  m_TagString: Ground
+  m_Name: Stage
+  m_TagString: Stage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -734,15 +734,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pooling.BlockSpawner
   mainCamera: {fileID: 330585546}
-  cameraOffset: {x: 1, y: 1, z: 0}
+  cameraYOffset: 1
   blockPlacingChannel: {fileID: 11400000, guid: 5f6da7052af47fb49bb967331275e49e, type: 2}
   legalObjects:
-  - meshFilter: {fileID: 9057106186949156996, guid: abbfe23402ee86f48bf9c73bb034263a, type: 3}
-    material: {fileID: 2100000, guid: 3b0e0c5fa35f873418dc9769bc3159ce, type: 2}
-  - meshFilter: {fileID: 8875911498618538927, guid: 783462b4008cac94d9ff803a4ba19a44, type: 3}
-    material: {fileID: 2100000, guid: 52a986046fbfca345b77db4f98a40472, type: 2}
-  - meshFilter: {fileID: 9134454257244159055, guid: 0d1c2d2b3b30d54408dca2f861d023bb, type: 3}
-    material: {fileID: 2100000, guid: a5425fbc4cedbfa4aa0c9f82a36d6f18, type: 2}
+  - blockMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    blockScale: {x: 1, y: 2, z: 1}
+    blockMaterial: {fileID: 2100000, guid: 3b0e0c5fa35f873418dc9769bc3159ce, type: 2}
+  - blockMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    blockScale: {x: 1, y: 0.25, z: 8}
+    blockMaterial: {fileID: 2100000, guid: 52a986046fbfca345b77db4f98a40472, type: 2}
+  - blockMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+    blockScale: {x: 1, y: 1, z: 1}
+    blockMaterial: {fileID: 2100000, guid: a5425fbc4cedbfa4aa0c9f82a36d6f18, type: 2}
   blockPool: {fileID: 161483120}
 --- !u!1 &681938938
 GameObject:
@@ -753,11 +756,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 681938940}
-  - component: {fileID: 681938939}
+  - component: {fileID: 681938946}
+  - component: {fileID: 681938945}
   - component: {fileID: 681938944}
+  - component: {fileID: 681938939}
+  - component: {fileID: 681938941}
   - component: {fileID: 681938943}
   - component: {fileID: 681938942}
-  - component: {fileID: 681938941}
   m_Layer: 0
   m_Name: Block Prefab
   m_TagString: Block
@@ -773,7 +778,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 681938938}
   serializedVersion: 5
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -790,7 +795,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 98
   m_CollisionDetection: 0
 --- !u!4 &681938940
 Transform:
@@ -872,6 +877,63 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!23 &681938945
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681938938}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &681938946
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681938938}
   m_Mesh: {fileID: 0}
 --- !u!1 &832575517
 GameObject:

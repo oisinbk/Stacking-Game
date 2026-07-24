@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
 using System;
 using Pooling;
+using Blocks.Channels;
 
 namespace Blocks
 {
-    [RequireComponent(typeof(MeshCollider), typeof(Rigidbody))]
+    [RequireComponent(typeof(MeshCollider), typeof(Rigidbody), typeof(GroundCollisionDetection))]
     public class BlockPlacement : MonoBehaviour, IPoolable
     {
-        [SerializeField] private BlockPlacingChannel blockPlacingChannel;
-        
+        [SerializeField] private BlockIsStableEventChannel blockIsStableEventChannel;
+
         private bool _blockIsStationary;
         public bool BlockIsStationary => _blockIsStationary;
         
-
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Block") && !_blockIsStationary)
@@ -27,7 +27,7 @@ namespace Blocks
             //if player is still holding the mouse return
             //if the block is moving too much return
 
-            blockPlacingChannel.RaiseEvent(transform.position.y);
+            blockIsStableEventChannel.RaiseEvent(transform.position.y);
             //TODO: update the most top point of the block instead of the center of it
         }
 

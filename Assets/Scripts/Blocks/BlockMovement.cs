@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using Blocks.Channels;
 
 namespace Blocks
 {
@@ -8,6 +9,8 @@ namespace Blocks
 
     public class BlockMovement : MonoBehaviour
     {
+        [SerializeField] private BlockPlacingChannel blockPlacingChannel;
+        
         [Header("Input Actions")]
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference rotateAction;
@@ -35,6 +38,8 @@ namespace Blocks
         {
             if (dropAction.action.triggered)
             {
+                blockPlacingChannel.RaiseEvent();
+                
                 // Turn off the input listening for this specific block
                 moveAction.action.Disable();
                 rotateAction.action.Disable();

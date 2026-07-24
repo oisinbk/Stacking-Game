@@ -2,71 +2,90 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Blocks;
+using Blocks.Channels;
 
 namespace Pooling
 {
     [Serializable]
-    public struct BlockData
+    public class BlockData
     {
-        public MeshFilter meshFilter;
-        public Material material;
+        public Mesh blockMesh;
+        public Vector3 blockScale = Vector3.one;
+        public Material blockMaterial;
     }
     
     public class BlockSpawner : MonoBehaviour
     {
         [SerializeField] private Transform mainCamera;
-        [SerializeField] private Vector3 cameraOffset = new Vector3(0, 1f, 1f);
-        [SerializeField] private BlockPlacingChannel blockPlacingChannel;
+        [SerializeField] private float cameraYOffset = 1f;
+        [SerializeField] private BlockIsStableEventChannel blockIsStableEventChannel;
         
         [SerializeField] private List<BlockData> legalObjects;
         [SerializeField] private BlockPool blockPool;
 
+        private bool _firstBlock = true;
+        
         private void Start()
         {
-            GenerateNewBlock(0f);
+            _firstBlock = true;
+            GenerateNewBlock();
+            _firstBlock = false;
         }
 
-        private void GenerateNewBlock(float topPoint)
+        private void GenerateNewBlock()
         {
             if (legalObjects == null || legalObjects.Count == 0) return;
             int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
             BlockData selectedBlock = legalObjects[randomIndex];
             
             BlockPlacement currentBlockPlacement = blockPool.Get();
-            currentBlockPlacement.transform.position = mainCamera.position + cameraOffset;
-            
-            if (currentBlockPlacement.TryGetComponent<MeshFilter>(out var filter))
-            {
-                filter.sharedMesh = selectedBlock.meshFilter.mesh;
-            }
+            currentBlockPlacement.transform.position = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
 
-            if (currentBlockPlacement.TryGetComponent<MeshRenderer>(out var renderer))
-            {
-                renderer.sharedMaterial = selectedBlock.material;
-            }
+            AddComponents(selectedBlock, currentBlockPlacement);
+        }
 
-            if (!currentBlockPlacement.TryGetComponent<MeshCollider>(out var collider))
+        private void AddComponents(BlockData selectedBlock, BlockPlacement currentBlockPlacement)
+        {
+            if (!currentBlockPlacement.TryGetComponent<MeshFilter>(out var meshFilter))
             {
-                collider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
+                meshFilter = currentBlockPlacement.gameObject.AddComponent<MeshFilter>();
+            }
+            meshFilter.sharedMesh = selectedBlock.blockMesh;
+
+            if (!currentBlockPlacement.TryGetComponent<MeshRenderer>(out var meshRenderer))
+            {
+                meshRenderer = currentBlockPlacement.gameObject.AddComponent<MeshRenderer>();
+            }
+            meshRenderer.sharedMaterial = selectedBlock.blockMaterial;
+            
+            if (!currentBlockPlacement.TryGetComponent<MeshCollider>(out var meshCollider))
+            {
+                meshCollider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
             }
             
-            collider.sharedMesh = selectedBlock.meshFilter.sharedMesh;
-            collider.convex = true;
+            Vector3 appliedScale = selectedBlock.blockScale;
+            if (appliedScale.x == 0) appliedScale.x = 1f;
+            if (appliedScale.y == 0) appliedScale.y = 1f;
+            if (appliedScale.z == 0) appliedScale.z = 1f;
+            
+            currentBlockPlacement.transform.localScale = appliedScale;
+            meshCollider.sharedMesh = selectedBlock.blockMesh;
+            meshCollider.convex = true;
         }
         
         private void OnEnable()
         {
-            blockPlacingChannel.BlockPlaced += GenerateNewBlock;
+            BlockPlacingChannel.SpawnNewBlock += GenerateNewBlock;
         }
 
         private void OnDisable()
         {
-            blockPlacingChannel.BlockPlaced -= GenerateNewBlock;
+            BlockPlacingChannel.SpawnNewBlock -= GenerateNewBlock;
         }
 
         private void OnDrawGizmos()
         {
-            Vector3 spawnPoint = mainCamera.position + cameraOffset;
+            Vector3 spawnPoint = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
             
             Color originalColor = Gizmos.color;
             Gizmos.color = Color.green;

@@ -1,18 +1,33 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using GameStates;
 
 namespace Blocks
 {
-    public class GroundCollisionDetection: MonoBehaviour
+    public class GroundCollisionDetection: MonoBehaviour, IBlockProperties
     {
         [SerializeField] private GameOverEventChannel gameOverChannel;
+        private bool _isFirst;
+        private bool _collidedWithFloor;
+
+        public void SetProperties(bool isFirst)
+        {
+            _isFirst = isFirst;
+        }
         
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Ground") && gameOverChannel != null)
+            if (gameOverChannel != null && !_collidedWithFloor)
             {
-                gameOverChannel.RaiseEvent(); 
+                if (other.gameObject.CompareTag("Ground"))
+                {
+                    _collidedWithFloor = true;
+                    gameOverChannel.RaiseEvent();
+                }
+                else if (other.gameObject.CompareTag("Stage") && !_isFirst)
+                {
+                    _collidedWithFloor = true;
+                    gameOverChannel.RaiseEvent();
+                }
             }
         }
     }
