@@ -1,26 +1,29 @@
 ﻿using System;
+using Pooling;
 using UnityEngine;
-using UI;
+using Unity.Cinemachine;
 
 namespace Tower_and_Camera
 {
     [RequireComponent(typeof(HeightManager))]
     public class CameraMover : MonoBehaviour
     {
-        [SerializeField] private Camera mainCamera;
-        
-        private HeightManager _heightManager;
-        private Vector3 _originalPosition;
-        
-        private void Awake()
+        [SerializeField] private CinemachineCamera mainCamera;
+
+        private void ChangeFollowTarget(GameObject target)
         {
-            _heightManager = GetComponent<HeightManager>();
-            _originalPosition = mainCamera.transform.position;
+            mainCamera.Target.TrackingTarget = target.transform;
         }
 
-        private void Update()
+
+        private void OnEnable()
         {
-            mainCamera.transform.position = _originalPosition + _heightManager.TowerTop;
+            SpawnEventChannel.SpawnBlock += ChangeFollowTarget;
+        }
+
+        private void OnDisable()
+        {
+            SpawnEventChannel.SpawnBlock -= ChangeFollowTarget;
         }
     }
 }

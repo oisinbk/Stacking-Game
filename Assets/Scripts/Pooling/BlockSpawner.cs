@@ -20,8 +20,7 @@ namespace Pooling
         [SerializeField] private SpawnEventChannel spawnEventChannel;
         [SerializeField] private InputActionReference dropAction;
         
-        [SerializeField] private Transform mainCamera;
-        [SerializeField] private float cameraYOffset = 1f;
+        [SerializeField] private Transform spawnLocation;
         
         [SerializeField] private List<BlockData> legalObjects;
         [SerializeField] private BlockPool blockPool;
@@ -54,7 +53,7 @@ namespace Pooling
             BlockData dataForBlock = legalObjects[randomIndex];
             
             BlockPlacement currentBlock = blockPool.Get();
-            currentBlock.transform.position = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
+            currentBlock.transform.position = spawnLocation.transform.position;
 
             AddComponents(dataForBlock, currentBlock);
             spawnEventChannel.RaiseEvent(currentBlock.gameObject);
@@ -107,7 +106,7 @@ namespace Pooling
 
         private void OnDrawGizmos()
         {
-            Vector3 spawnPoint = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
+            Vector3 spawnPoint = spawnLocation.position;
             
             Color originalColor = Gizmos.color;
             Gizmos.color = Color.green;
