@@ -22,11 +22,6 @@ namespace Blocks
             }
         }
 
-        private void Update()
-        {
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
-
         private void BlockPlaced()
         {
             //if player is still holding the mouse return
