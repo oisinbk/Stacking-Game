@@ -1,10 +1,9 @@
-﻿using System;
-using Pooling;
-using Tower_and_Camera;
+﻿using Pooling;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Blocks.Channels;
 
-namespace Blocks.Channels
+namespace Blocks
 {
     public class BlockMover : MonoBehaviour
     {
@@ -16,14 +15,13 @@ namespace Blocks.Channels
         [SerializeField] private InputActionReference dropAction;
 
         [Header("Movement Settings")]
-        [SerializeField] private float maxMoveSpeed = 10f;
-        [Tooltip("How fast the block reaches max speed and stops. Higher = less sliding.")]
-        [SerializeField] private float moveSnappiness = 15f; 
+        [SerializeField] private float moveSpeed = 10f;
+        [SerializeField] private float moveStartDelay = 0.2f;
+        [SerializeField] private float moveEndDelay = 0.2f;
 
         [Header("Rotation Settings")]
-        [SerializeField] private float maxRotationSpeed = 200f;
-        [Tooltip("How fast the block reaches max rotation and stops.")]
-        [SerializeField] private float rotationSnappiness = 15f;
+        [SerializeField] private float rotSpeed = 5f;
+        [SerializeField] private float dropOffFactor = 0.5f;
 
         [Header("Tower Stabilizers")]
         [Tooltip("lower the center of mass of the block by this factor")]
@@ -105,24 +103,32 @@ namespace Blocks.Channels
         
         private void MoveBlock()
         {
+            Vector3 targetVelocity = new Vector3(_moveInput.x, _moveInput.y, 0f) * moveSpeed;
             // Apply X/Y movement
-            Vector3 targetVelocity = new Vector3(_moveInput.x, _moveInput.y, 0f) * maxMoveSpeed;
-            Vector3 velocityChange = targetVelocity - _rb.linearVelocity;
-            
-            float moveRate = Time.fixedDeltaTime / Mathf.Max(Time.fixedDeltaTime, moveSnappiness);
-
-            _rb.AddForce(velocityChange * moveRate, ForceMode.VelocityChange);
+            if (_moveInput != Vector2.zero)
+            {
+                _rb.linearVelocity = 
+                    Vector3.Lerp(_rb.linearVelocity, targetVelocity, moveStartDelay * Time.fixedDeltaTime); 
+            }
+            else
+            {
+                _rb.linearVelocity = 
+                    Vector3.Lerp(_rb.linearVelocity, Vector3.zero, moveEndDelay * Time.fixedDeltaTime); 
+            }
         }
 
         private void RotateBLock()
         {
             // Apply Z rotation
-            Vector3 targetAngularVelocity = new Vector3(0f, 0f, _rotationInput * maxRotationSpeed);
-            Vector3 angularVelocityDifference = targetAngularVelocity - _rb.angularVelocity;
-            
-            float rotRate = Time.fixedDeltaTime / Mathf.Max(Time.fixedDeltaTime, rotationSnappiness);
-
-            _rb.AddTorque(angularVelocityDifference * rotRate, ForceMode.VelocityChange);
+            if (_rotationInput != 0)
+            {
+                _rb.angularVelocity = new Vector3(0, 0, _rotationInput * rotSpeed);
+            }
+            else
+            {
+                _rb.angularVelocity =
+                    Vector3.Lerp(_rb.angularVelocity, Vector3.zero, dropOffFactor * Time.fixedDeltaTime);
+            }
         }
 
         private void ClampBlockPosition()
