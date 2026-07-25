@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using UI;
 
-namespace Data
+namespace Tower_and_Camera
 {
     [RequireComponent(typeof(HeightManager))]
     public class CameraMover : MonoBehaviour

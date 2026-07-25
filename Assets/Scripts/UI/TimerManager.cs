@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Data
+namespace UI
 {
     public class TimerManager : MonoBehaviour, ITimer
     {

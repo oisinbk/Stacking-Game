@@ -1,4 +1,4 @@
-﻿namespace Data
+﻿namespace UI
 {
     public interface ITimer
     {

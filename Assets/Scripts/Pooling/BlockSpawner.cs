@@ -31,7 +31,7 @@ namespace Pooling
         
         private bool _firstBlock = true;
         
-        private void Start()
+        public void StartGame()
         {
             _firstBlock = true;
             GenerateNewBlock();

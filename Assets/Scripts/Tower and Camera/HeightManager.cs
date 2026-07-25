@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Blocks.Channels;
 
-namespace Data
+namespace Tower_and_Camera
 {
     public class HeightManager : MonoBehaviour
     {
@@ -9,6 +9,7 @@ namespace Data
         public float Score {get; private set;}
         
         public Vector3 TowerTop => new Vector3(0, _towerHeight, 0);
+        private float _maxTowerHeight;
         private float _towerHeight;
 
         private void AddToScore(float newHeight)
@@ -16,11 +17,11 @@ namespace Data
             if (newHeight > _towerHeight)
             {
                 _towerHeight = newHeight;
-                Score = _towerHeight - towerBottom.y;
+                Score = (int)(_towerHeight - towerBottom.y);
             }
         }
 
-        private void ResetScore()
+        public void ResetScore()
         {
             _towerHeight = 0;
         }

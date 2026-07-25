@@ -1,10 +1,11 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using Tower_and_Camera;
 
-namespace Data
+namespace UI
 {
-    public class ScoreText : MonoBehaviour
+    public class TowerHeightText : MonoBehaviour
     {
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private HeightManager heightManager;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 
-namespace Data
+namespace UI
 {
     public class TimerText : MonoBehaviour
     {
