@@ -5,14 +5,19 @@ using Unity.Cinemachine;
 
 namespace Tower_and_Camera
 {
-    [RequireComponent(typeof(HeightManager))]
+    [RequireComponent(typeof(CinemachineCamera))]
     public class CameraMover : MonoBehaviour
     {
-        [SerializeField] private CinemachineCamera mainCamera;
+        private CinemachineCamera _mainCamera;
+
+        private void Awake()
+        {
+            _mainCamera = GetComponent<CinemachineCamera>();
+        }
 
         private void ChangeFollowTarget(GameObject target)
         {
-            mainCamera.Target.TrackingTarget = target.transform;
+            _mainCamera.Target.TrackingTarget = target.transform;
         }
 
 

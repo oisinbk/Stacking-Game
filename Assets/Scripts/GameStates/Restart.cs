@@ -9,6 +9,8 @@ namespace GameStates
     public class Restart : MonoBehaviour
     {
         [SerializeField] private InputActionReference restartAction;
+        [SerializeField] private PauseManager pauseManager;
+        [SerializeField] private GameObject GameOverMenu;
 
         private void Update()
         {
@@ -23,15 +25,21 @@ namespace GameStates
             Debug.Log("Game Over");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
+        private void GameOver()
+        {
+            pauseManager.PauseGame();
+            GameOverMenu.SetActive(true);
+        }
         
         private void OnEnable()
         {
-            GameOverEventChannel.GameOver += RestartGame;
+            GameOverEventChannel.GameOver += GameOver;
         }
 
         private void OnDisable()
         {
-            GameOverEventChannel.GameOver -= RestartGame;
+            GameOverEventChannel.GameOver -= GameOver;
         }
     }
 }
