@@ -7,7 +7,7 @@ namespace GameStates
     public class GameOverEventChannel : ScriptableObject
     {
         // Pass the block's transform or Y-position in the action payload
-        public event Action GameOver;
+        public static event Action GameOver;
 
         public void RaiseEvent()
         {

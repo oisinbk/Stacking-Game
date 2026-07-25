@@ -17,18 +17,14 @@ namespace Pooling
 
         private void Awake()
         {
-            for (int i = 0; i < originalSize; i++)
-            {
-                var instance =  Instantiate(prefab, parent: transform);
-                Return(instance);
-            }
+            IncreasePool(originalSize);
         }
 
         public T Get()
         {
             if (_available.Count < 1)
             {
-                IncreasePool();
+                IncreasePool(increaseSize);
             }
             
             var pooledObject = _available.Pop();
@@ -40,15 +36,15 @@ namespace Pooling
             return pooledObject;
         }
 
-        private void IncreasePool()
+        private void IncreasePool(int amount)
         {
+            size += amount;
+            
             for (var i = 0; i < size; i++)
             {
                 var instance =  Instantiate(prefab, parent: transform);
                 Return(instance);
             }
-
-            size += increaseSize;
         }
 
         public void Return(T obj)

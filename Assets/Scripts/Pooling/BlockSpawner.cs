@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Blocks;
 using Blocks.Channels;
+using UnityEngine.InputSystem;
 
 namespace Pooling
 {
@@ -16,13 +17,18 @@ namespace Pooling
     
     public class BlockSpawner : MonoBehaviour
     {
+        [SerializeField] private SpawnEventChannel spawnEventChannel;
+        [SerializeField] private InputActionReference dropAction;
+        
         [SerializeField] private Transform mainCamera;
         [SerializeField] private float cameraYOffset = 1f;
-        [SerializeField] private BlockIsStableEventChannel blockIsStableEventChannel;
         
         [SerializeField] private List<BlockData> legalObjects;
         [SerializeField] private BlockPool blockPool;
-
+        
+        [SerializeField] private float coolDownTime = 1f;
+        private float _lastSpawnTime = -1f;
+        
         private bool _firstBlock = true;
         
         private void Start()
@@ -32,33 +38,51 @@ namespace Pooling
             _firstBlock = false;
         }
 
+        private void Update()
+        {
+            if (Time.unscaledTime - _lastSpawnTime < coolDownTime)
+            {
+                return;
+            }
+            
+            _lastSpawnTime = Time.unscaledTime;
+        }
+
         private void GenerateNewBlock()
         {
+            Debug.Log("Generating new block");
             if (legalObjects == null || legalObjects.Count == 0) return;
             int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
-            BlockData selectedBlock = legalObjects[randomIndex];
+            BlockData dataForBlock = legalObjects[randomIndex];
             
-            BlockPlacement currentBlockPlacement = blockPool.Get();
-            currentBlockPlacement.transform.position = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
+            BlockPlacement currentBlock = blockPool.Get();
+            currentBlock.transform.position = new Vector3(0, mainCamera.position.y + cameraYOffset, 0);
 
-            AddComponents(selectedBlock, currentBlockPlacement);
+            AddComponents(dataForBlock, currentBlock);
+            spawnEventChannel.RaiseEvent(currentBlock.gameObject);
         }
 
         private void AddComponents(BlockData selectedBlock, BlockPlacement currentBlockPlacement)
         {
-            if (!currentBlockPlacement.TryGetComponent<MeshFilter>(out var meshFilter))
+            if (!currentBlockPlacement.TryGetComponent(out GroundCollisionDetection groundCollision))
+            {
+                groundCollision = currentBlockPlacement.gameObject.AddComponent<GroundCollisionDetection>();
+            }
+            groundCollision.SetProperties(_firstBlock);
+            
+            if (!currentBlockPlacement.TryGetComponent(out MeshFilter meshFilter))
             {
                 meshFilter = currentBlockPlacement.gameObject.AddComponent<MeshFilter>();
             }
             meshFilter.sharedMesh = selectedBlock.blockMesh;
 
-            if (!currentBlockPlacement.TryGetComponent<MeshRenderer>(out var meshRenderer))
+            if (!currentBlockPlacement.TryGetComponent(out MeshRenderer meshRenderer))
             {
                 meshRenderer = currentBlockPlacement.gameObject.AddComponent<MeshRenderer>();
             }
             meshRenderer.sharedMaterial = selectedBlock.blockMaterial;
             
-            if (!currentBlockPlacement.TryGetComponent<MeshCollider>(out var meshCollider))
+            if (!currentBlockPlacement.TryGetComponent(out MeshCollider meshCollider))
             {
                 meshCollider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
             }

@@ -335,6 +335,7 @@ Transform:
   m_Children:
   - {fileID: 161483119}
   - {fileID: 681818675}
+  - {fileID: 2046519296}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &322462852
@@ -536,13 +537,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09229593, y: 0.7010574, z: -0.09229593, w: 0.7010574}
-  m_LocalPosition: {x: -4.7, y: 1.5259371, z: 0}
+  m_LocalRotation: {x: 0.0473418, y: 0, z: 0, w: 0.9988788}
+  m_LocalPosition: {x: 0, y: 2.07, z: -6.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 15, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.427, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -870,20 +871,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5611ab839f424ed1a6ecafb264d794c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pooling.BlockSpawner
+  spawnEventChannel: {fileID: 11400000, guid: e0f85377914b08a439fd5390f3dd6ef2, type: 2}
+  dropAction: {fileID: -8537055466725046386, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
   mainCamera: {fileID: 330585546}
   cameraYOffset: 1
-  blockIsStableEventChannel: {fileID: 0}
   legalObjects:
   - blockMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
     blockScale: {x: 1, y: 2, z: 1}
     blockMaterial: {fileID: 2100000, guid: 3b0e0c5fa35f873418dc9769bc3159ce, type: 2}
   - blockMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-    blockScale: {x: 1, y: 0.25, z: 8}
+    blockScale: {x: 8, y: 0.25, z: 1}
     blockMaterial: {fileID: 2100000, guid: 52a986046fbfca345b77db4f98a40472, type: 2}
   - blockMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
     blockScale: {x: 1, y: 1, z: 1}
     blockMaterial: {fileID: 2100000, guid: a5425fbc4cedbfa4aa0c9f82a36d6f18, type: 2}
   blockPool: {fileID: 161483120}
+  coolDownTime: 1
 --- !u!1 &681938938
 GameObject:
   m_ObjectHideFlags: 0
@@ -897,7 +900,6 @@ GameObject:
   - component: {fileID: 681938945}
   - component: {fileID: 681938944}
   - component: {fileID: 681938939}
-  - component: {fileID: 681938941}
   - component: {fileID: 681938943}
   - component: {fileID: 681938942}
   m_Layer: 0
@@ -906,7 +908,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &681938939
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -932,7 +934,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 98
+  m_Constraints: 56
   m_CollisionDetection: 0
 --- !u!4 &681938940
 Transform:
@@ -949,25 +951,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &681938941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681938938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c264ed8d12714574a45ad43f89813693, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Blocks.BlockMovement
-  blockPlacingChannel: {fileID: 11400000, guid: 5f6da7052af47fb49bb967331275e49e, type: 2}
-  moveAction: {fileID: -8855312800255623051, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
-  rotateAction: {fileID: 1323041084508504339, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
-  dropAction: {fileID: -8537055466725046386, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
-  moveForce: 10
-  torqueForce: 5
-  stabilizeFactor: 0.5
 --- !u!114 &681938942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,6 +1184,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Data.CameraMover
   mainCamera: {fileID: 330585545}
+--- !u!1 &1363927015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1363927017}
+  - component: {fileID: 1363927016}
+  m_Layer: 0
+  m_Name: GameState Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1363927016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363927015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28c402648b5e4053b1ae11f5c95ed32c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameStates.Restart
+  restartAction: {fileID: 7074382589737789827, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
+--- !u!4 &1363927017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363927015}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.81228, y: 1.54024, z: 8.29562}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1657198721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1494,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1901404916}
   m_CullTransparentMesh: 1
+--- !u!1 &2046519295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046519296}
+  - component: {fileID: 2046519297}
+  m_Layer: 0
+  m_Name: Block Mover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2046519296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046519295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 312478991}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2046519297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046519295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527f5f125a4a979d979fcd68b2195f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Blocks.Channels.BlockMover
+  blockPlacingChannel: {fileID: 11400000, guid: 5f6da7052af47fb49bb967331275e49e, type: 2}
+  moveAction: {fileID: -8855312800255623051, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
+  rotateAction: {fileID: 1323041084508504339, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
+  dropAction: {fileID: -8537055466725046386, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
+  moveForce: 10
+  torqueForce: 5
+  stabilizeFactor: 0.5
 --- !u!1 &2070647272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,6 +1554,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2070647273}
+  - component: {fileID: 2070647275}
+  - component: {fileID: 2070647274}
   m_Layer: 0
   m_Name: Timer Manager
   m_TagString: Untagged
@@ -1502,6 +1583,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2070647274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070647272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b55a77808f764362b86430097c5ffe02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Data.TimerText
+  timerText: {fileID: 1901404918}
+  timerManager: {fileID: 2070647275}
+--- !u!114 &2070647275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070647272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2488087d8bd4546a74dddb1fbfc20d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Data.TimerManager
+  startTime: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1513,3 +1621,4 @@ SceneRoots:
   - {fileID: 312478991}
   - {fileID: 681938940}
   - {fileID: 1657198725}
+  - {fileID: 1363927017}

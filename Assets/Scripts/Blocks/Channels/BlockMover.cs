@@ -1,13 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using Pooling;
+using UnityEngine;
 using UnityEngine.InputSystem;
-using Blocks.Channels;
 
-namespace Blocks
+namespace Blocks.Channels
 {
-    [RequireComponent(typeof(BlockPlacement),
-        typeof(Rigidbody))]
-
-    public class BlockMovement : MonoBehaviour
+    public class BlockMover : MonoBehaviour
     {
         [SerializeField] private BlockPlacingChannel blockPlacingChannel;
         
@@ -22,8 +20,10 @@ namespace Blocks
 
         [Tooltip("lower the center of mass of the block by this factor")]
         [SerializeField] private float stabilizeFactor = 0.5f;
-        
+
+        private GameObject _currentBlock;
         private Rigidbody _rb;
+        private bool _droppedBlock;
 
         //inputs
         private Vector2 _moveInput;
@@ -31,25 +31,36 @@ namespace Blocks
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
+            _rb = null;
+        }
+
+        private void AssignNewBlock(GameObject newBlock)
+        {
+            _currentBlock = newBlock;
+            _rb = _currentBlock.GetComponent<Rigidbody>();
+            
+            _rb.useGravity = false;
+            _rb.centerOfMass = _currentBlock.transform.position;
+            
+            _droppedBlock = false;
         }
 
         private void Update()
         {
-            if (dropAction.action.triggered)
+            if (_rb == null) return;
+            if (dropAction.action.WasPressedThisFrame())
             {
+                // Turn off the input listening for this specific block
                 blockPlacingChannel.RaiseEvent();
                 
-                // Turn off the input listening for this specific block
-                moveAction.action.Disable();
-                rotateAction.action.Disable();
                 _rb.useGravity = true;
-                _rb.centerOfMass = transform.position + Vector3.down * stabilizeFactor;
-            
-                // Shut off the script so it stops taking up CPU cycles
-                enabled = false; 
-                return;
+                _rb.centerOfMass = _currentBlock.transform.position + Vector3.down * stabilizeFactor;
+                
+                _moveInput = Vector2.zero;
+                _rotationInput = 0f;
+                _droppedBlock = true;
             }
+            if (_droppedBlock) return;
 
             // Read directly from the Action Map reference
             _moveInput = moveAction.action.ReadValue<Vector2>();
@@ -58,6 +69,7 @@ namespace Blocks
 
         private void FixedUpdate()
         {
+            if (_rb == null) return;
             // Apply Y/Z movement
             if (_moveInput != Vector2.zero)
             {
@@ -75,14 +87,18 @@ namespace Blocks
 
         private void OnEnable()
         {
+            SpawnEventChannel.SpawnBlock += AssignNewBlock;
             moveAction.action.Enable();
             rotateAction.action.Enable();
+            dropAction.action.Enable();
         }
 
         private void OnDisable() 
         {
+            SpawnEventChannel.SpawnBlock -= AssignNewBlock;
             moveAction.action.Disable();
             rotateAction.action.Disable();
+            dropAction.action.Disable();
         }
     }
 }
