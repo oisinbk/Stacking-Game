@@ -7,7 +7,7 @@ namespace Blocks.Channels
 {
     public class BlockMover : MonoBehaviour
     {
-        [SerializeField] private BlockPlacingChannel blockPlacingChannel;
+        [SerializeField] private BlockDroppedEventChannel blockDroppedEventChannel;
         
         [Header("Input Actions")]
         [SerializeField] private InputActionReference moveAction;
@@ -40,7 +40,7 @@ namespace Blocks.Channels
             _rb = _currentBlock.GetComponent<Rigidbody>();
             
             _rb.useGravity = false;
-            _rb.centerOfMass = _currentBlock.transform.position;
+            _rb.centerOfMass = Vector3.zero; //this is calculated in local space
             
             _droppedBlock = false;
         }
@@ -50,15 +50,15 @@ namespace Blocks.Channels
             if (_rb == null) return;
             if (dropAction.action.WasPressedThisFrame())
             {
-                // Turn off the input listening for this specific block
-                blockPlacingChannel.RaiseEvent();
-                
                 _rb.useGravity = true;
-                _rb.centerOfMass = _currentBlock.transform.position + Vector3.down * stabilizeFactor;
+                _rb.centerOfMass = Vector3.down * stabilizeFactor; //this is calculated in local space
                 
-                _moveInput = Vector2.zero;
+                _moveInput = Vector2.zero; 
                 _rotationInput = 0f;
                 _droppedBlock = true;
+                
+                // Turn off the input listening for this specific block
+                blockDroppedEventChannel.RaiseEvent();
             }
             if (_droppedBlock) return;
 

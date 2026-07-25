@@ -9,7 +9,7 @@ namespace Blocks
 
     public class BlockMovement : MonoBehaviour
     {
-        [SerializeField] private BlockPlacingChannel blockPlacingChannel;
+        [SerializeField] private BlockDroppedEventChannel blockDroppedEventChannel;
         
         [Header("Input Actions")]
         [SerializeField] private InputActionReference moveAction;
@@ -38,7 +38,7 @@ namespace Blocks
         {
             if (dropAction.action.triggered)
             {
-                blockPlacingChannel.RaiseEvent();
+                blockDroppedEventChannel.RaiseEvent();
                 
                 // Turn off the input listening for this specific block
                 moveAction.action.Disable();

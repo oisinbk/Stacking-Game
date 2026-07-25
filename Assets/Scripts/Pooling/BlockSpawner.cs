@@ -38,13 +38,11 @@ namespace Pooling
             _firstBlock = false;
         }
 
-        private void Update()
+        private void RequestGenerateNewBlock()
         {
-            if (Time.unscaledTime - _lastSpawnTime < coolDownTime)
-            {
-                return;
-            }
+            while (Time.unscaledTime - _lastSpawnTime < coolDownTime) { }
             
+            GenerateNewBlock();
             _lastSpawnTime = Time.unscaledTime;
         }
 
@@ -99,12 +97,12 @@ namespace Pooling
         
         private void OnEnable()
         {
-            BlockPlacingChannel.SpawnNewBlock += GenerateNewBlock;
+            BlockDroppedEventChannel.DroppedBlock += RequestGenerateNewBlock;
         }
 
         private void OnDisable()
         {
-            BlockPlacingChannel.SpawnNewBlock -= GenerateNewBlock;
+            BlockDroppedEventChannel.DroppedBlock -= RequestGenerateNewBlock;
         }
 
         private void OnDrawGizmos()

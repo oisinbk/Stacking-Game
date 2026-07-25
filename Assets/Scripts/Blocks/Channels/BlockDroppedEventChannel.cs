@@ -4,13 +4,13 @@ using System;
 namespace Blocks.Channels
 {
     [CreateAssetMenu(fileName = "BlockPlacingChannel", menuName = "Events/Block Placing Event Channel")]
-    public class BlockPlacingChannel : ScriptableObject
+    public class BlockDroppedEventChannel : ScriptableObject
     {
-        public static event Action SpawnNewBlock;
+        public static event Action DroppedBlock;
         
         public void RaiseEvent()
         {
-            SpawnNewBlock?.Invoke();
+            DroppedBlock?.Invoke();
         }
     }
 }
