@@ -8,121 +8,58 @@ using Cysharp.Threading.Tasks;
 
 namespace Sound
 {
-    public class SoundFXManager : MonoSingleton<SoundFXManager>
+    public class SoundFXManager : MonoBehaviour
     {
-        //responsible for:
-        //  retrieving audio sources from a pool
-        //  checking their volume and pitch
-        //  playing them
-        //  returning them to pool
-        
-        //TODO: needs lots of work here
-        [SerializeField] private float masterVolume;
         [SerializeField] private AudioObjectPool audioPool;
-        [SerializeField] private float fadeTime = 2f;
-        [SerializeField] private AudioClip buttonEffect;
 
-        public void PlayButtonEffect()
-        {
-            PlaySoundFXClip(buttonEffect, transform, 1, 1);
-        }
+        private float _masterVolume;
         
-        public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float vol, float pitch)
+        //playing FX- no loops
+        //playing randomized FX- no loops
+        
+        public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float vol)
         {
             //AudioSource audioSource = Instantiate(soundFXObject, spawnTransform.position, Quaternion.identity, this.transform);
-            AudioObject audioObject = audioPool.GetAudioObject(audioClip, spawnTransform);
-            audioObject.transform.rotation = Quaternion.identity;
-            audioObject.audioSource.volume = vol * masterVolume;
-            audioObject.audioSource.pitch = Random.Range(0.9f, 1.1f) * pitch;
+            AudioObject audioObject = audioPool.Get();
+            audioObject.audioSource.clip = audioClip;
+            audioObject.transform.position = spawnTransform.position;
+            
+            audioObject.audioSource.volume = vol * _masterVolume;
+            float randomPitch = Random.Range(0.9f, 1.1f);
+            audioObject.audioSource.pitch = randomPitch;
+            
             audioObject.audioSource.Play();
-            StartCoroutine(ReturnToPoolAfterDelay(audioObject, audioClip.length));
+            
+            float actualLength = audioClip.length/randomPitch;
+            ReturnToPoolAsync(audioObject, actualLength).Forget();
         }
-        
-        private IEnumerator ReturnToPoolAfterDelay(AudioObject obj, float delay)
+    
+        private async UniTaskVoid ReturnToPoolAsync(AudioObject obj, float delay)
         {
-            yield return new WaitForSeconds(delay);
-            audioPool.Return(obj);
+            // SuppressCancellationThrow prevents errors if the manager is destroyed while waiting
+            bool canceled = await UniTask.Delay(
+                System.TimeSpan.FromSeconds(delay), 
+                cancellationToken: this.GetCancellationTokenOnDestroy()
+            ).SuppressCancellationThrow();
+        
+            // Only return to pool if the task wasn't cancelled (e.g., scene didn't unload)
+            if (!canceled && obj != null)
+            {
+                audioPool.Return(obj);
+            }
         }
         
-        public void PlayRandomSoundFXClip(List<AudioClip> audioClips, Transform spawnTransform, float volume, float pitch)
+        public void PlayRandomSoundFXClip(List<AudioClip> audioClips, Transform spawnTransform, float volume)
         {
             if (audioClips == null || audioClips.Count == 0) return;
 
             int rand = Random.Range(0, audioClips.Count);
-            PlaySoundFXClip(audioClips[rand], spawnTransform, volume, pitch);
-        }
-        
-        
-        
-        public AudioObject FadeInLoopingEffect(AudioClip audioClip, Transform spawnTransform, float targetVol, float pitch)
-        {
-            AudioObject audioObject = audioPool.GetAudioObject(audioClip, spawnTransform);
-            audioObject.transform.rotation = Quaternion.identity;
-            
-            audioObject.audioSource.loop = true;
-            audioObject.audioSource.pitch = pitch;
-            
-            audioObject.audioSource.volume = 0f;
-            audioObject.audioSource.Play();
-            
-            float finalTargetVolume = targetVol * masterVolume;
-            
-            // Trigger the UniTask and forget it
-            FadeInAsync(audioObject, finalTargetVolume, fadeTime, this.GetCancellationTokenOnDestroy()).Forget();
-            
-            return audioObject;
+            PlaySoundFXClip(audioClips[rand], spawnTransform, volume);
         }
 
-        private async UniTaskVoid FadeInAsync(AudioObject obj, float targetVolume, float duration, CancellationToken token)
+        public void AdjustMasterVolume(float volume)
         {
-            float timeElapsed = 0f;
-
-            while (timeElapsed < duration)
-            {
-                // Safely exit if manager is destroyed or object is somehow lost
-                if (token.IsCancellationRequested || obj == null) return;
-
-                obj.audioSource.volume = Mathf.Lerp(0f, targetVolume, timeElapsed / duration);
-                timeElapsed += Time.unscaledDeltaTime;
-                
-                // Yield to the next frame (Update loop)
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-            
-            if (obj != null) obj.audioSource.volume = targetVolume;
-        }
-        
-        public void FadeOutLoopingEffect(AudioObject audioObject)
-        {
-            if (audioObject != null && audioObject.audioSource.isPlaying)
-            {
-                FadeOutAsync(audioObject, fadeTime, this.GetCancellationTokenOnDestroy()).Forget();
-            }
-        }
-
-        private async UniTaskVoid FadeOutAsync(AudioObject obj, float duration, CancellationToken token)
-        {
-            float timeElapsed = 0f;
-            float startVolume = obj.audioSource.volume;
-
-            while (timeElapsed < duration)
-            {
-                if (token.IsCancellationRequested || obj == null) return;
-
-                obj.audioSource.volume = Mathf.Lerp(startVolume, 0f, timeElapsed / duration);
-                timeElapsed += Time.unscaledDeltaTime;
-                
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            if (obj != null)
-            {
-                obj.audioSource.volume = 0f;
-                obj.audioSource.Stop();
-                obj.audioSource.loop = false;
-                
-                audioPool.Return(obj);
-            }
+            _masterVolume = volume;
         }
     }
 }

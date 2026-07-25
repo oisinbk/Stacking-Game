@@ -8,11 +8,10 @@ namespace Sound
     public class AudioObject : MonoBehaviour, IPoolable
     {
         public AudioSource audioSource;
-        //TODO: wtf is going on here
+
         private void Awake()
         {
-            if (audioSource == null)
-                audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) audioSource = GetComponent<AudioSource>();
         }
         
         public void Reset()

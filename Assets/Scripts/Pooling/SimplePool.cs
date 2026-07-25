@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Pooling
 {
-    public class SimplePool<T> : MonoSingleton<SimplePool<T>> where T : MonoBehaviour, IPoolable
+    public class SimplePool<T> : MonoBehaviour where T : MonoBehaviour, IPoolable
     {
         [SerializeField] private T prefab;
         [SerializeField] private int size;
