@@ -9,7 +9,7 @@ using Sound;
 
 namespace GameStates
 {
-    public class Bootstrapper : MonoSingleton<Bootstrapper>
+    public class Bootstrapper : MonoBehaviour
     {
         [SerializeField] private PauseManager pauseManager;
         [SerializeField] private BlockSpawner blockSpawner;

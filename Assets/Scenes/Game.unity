@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89eb548e1f949799b056b17f444ba46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Menus.MainMenu
+  bootstrapper: {fileID: 1363927018}
   pauseManager: {fileID: 273610347}
   allMenu: {fileID: 539569233}
   mainMenuVisuals: {fileID: 49370435}
@@ -3664,7 +3665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower_and_Camera.HeightGoals
   heightManager: {fileID: 1134365214}
   timerManager: {fileID: 2070647275}
-  goalPrefab: {fileID: 5446168160969693246, guid: aade6f576fd09ce42bcece98623335b7, type: 3}
+  goalPrefab: {fileID: 3195697835012219601, guid: aade6f576fd09ce42bcece98623335b7, type: 3}
 --- !u!1 &1127780086
 GameObject:
   m_ObjectHideFlags: 0
@@ -3849,7 +3850,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Data.ScoreText
   scoreText: {fileID: 272568893}
-  heightManager: {fileID: 1134365214}
 --- !u!114 &1134365214
 MonoBehaviour:
   m_ObjectHideFlags: 0

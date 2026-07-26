@@ -6,6 +6,7 @@ namespace Menus
 {
     public class MainMenu : MonoBehaviour
     {
+        [SerializeField] private Bootstrapper bootstrapper;
         [SerializeField] private PauseManager pauseManager;
         [SerializeField] private GameObject allMenu;
         [SerializeField] private GameObject mainMenuVisuals;
@@ -14,7 +15,7 @@ namespace Menus
 
         public void PlayButton()
         {
-            Bootstrapper.Instance.StartGame();
+            bootstrapper.StartGame();
             allMenu.SetActive(false);
         }
 
