@@ -16,7 +16,7 @@ namespace Tower_and_Camera
         private void Update()
         {
             if (_currentGoal == null) return;
-            if (heightManager.TowerTop.y >= _currentGoal.transform.position.y)
+            if (heightManager.TowerTop.y >= _currentGoal.transform.position.y - heightManager.TowerBottom.y)
             {
                 timerManager.IncrementTimer();
                 GenerateNextGoal();
@@ -40,6 +40,17 @@ namespace Tower_and_Camera
             //x is the previous goal index
             int height = x * x / 10 + 4 * x + 3;
             return height;
-        }   
+        }
+
+        public void ResetGoals()
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+
+            _currentGoal = null;
+            _currentGoalIndex = 1;
+        }
     }
 }

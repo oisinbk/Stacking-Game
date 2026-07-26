@@ -15,7 +15,7 @@ namespace Menus
 
         public void PlayButton()
         {
-            bootstrapper.StartGame();
+            bootstrapper.StartGame().Forget();
             allMenu.SetActive(false);
         }
 

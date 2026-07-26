@@ -24,8 +24,8 @@ namespace Pooling
         
         [SerializeField] private Transform spawnLocation;
         
+        [SerializeField] private BlockPlacement blockPrefab;
         [SerializeField] private List<BlockData> legalObjects;
-        [SerializeField] private BlockPool blockPool;
         
         [SerializeField] private float coolDownTime = 1f;
         private float _lastSpawnTime = -1f;
@@ -39,6 +39,15 @@ namespace Pooling
             GenerateNewBlock();
         }
 
+        public void DestroyAllBlocks()
+        {
+            // Destroys all blocks that we parented to this spawner
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+        
         private void RequestGenerateNewBlock()
         {
             if(_isWaitingToSpawn) return;
@@ -77,10 +86,11 @@ namespace Pooling
             int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
             BlockData dataForBlock = legalObjects[randomIndex];
             
-            BlockPlacement currentBlock = blockPool.Get();
+            BlockPlacement currentBlock = Instantiate(blockPrefab, transform);
             currentBlock.transform.position = spawnLocation.transform.position;
 
             AddComponents(dataForBlock, currentBlock);
+            currentBlock.gameObject.SetActive(true);
             spawnEventChannel.RaiseEvent(currentBlock.gameObject);
             _firstBlock = false;
         }

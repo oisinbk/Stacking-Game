@@ -26,12 +26,17 @@ namespace Blocks
         {
             _collider = GetComponent<Collider>();
             _rb = GetComponent<Rigidbody>();
+            
+            //higher precision rb calculations
+            _rb.sleepThreshold = 0.01f;
         }
         
         
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Block") && !_blockIsStationary && !_isAlreadyChecking)
+            if ((other.gameObject.CompareTag("Block") || other.gameObject.CompareTag("Stage"))
+                && !_blockIsStationary
+                && !_isAlreadyChecking)
             {
                 CheckIfSettledAsync(this.GetCancellationTokenOnDestroy()).Forget();
             }
@@ -43,10 +48,12 @@ namespace Blocks
             _isAlreadyChecking = true;
             float timeStationary = 0f;
 
+            float sqrThreshold = minVelocityThreshold * minVelocityThreshold;
+            
             while (timeStationary < requiredSettleTime)
             {
-                bool isMoving = _rb.linearVelocity.sqrMagnitude > minVelocityThreshold;
-                bool isRotating = _rb.angularVelocity.sqrMagnitude > minVelocityThreshold;
+                bool isMoving = _rb.linearVelocity.sqrMagnitude > sqrThreshold;
+                bool isRotating = _rb.angularVelocity.sqrMagnitude > sqrThreshold;
 
                 if (!isMoving && !isRotating)
                 {
@@ -69,11 +76,29 @@ namespace Blocks
         private void BlockPlaced()
         {
             blockIsStableEventChannel.RaiseEvent(_collider.bounds.max.y);
+            
+            //lower precision rb calculations
+            _rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            _rb.solverIterations = 6;
+            _rb.solverVelocityIterations = 1;
         }
 
         public void Reset()
         {
             transform.position = Vector3.zero;
+            
+            // Reset state flags
+            _blockIsStationary = false;
+            _isAlreadyChecking = false;
+            
+            // Reset velocities so it doesn't carry over old momentum from its previous life
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+            
+            // Higher precision rb calculations for the fresh drop
+            _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            _rb.solverIterations = 20;
+            _rb.solverVelocityIterations = 10;
         }
     }
 }

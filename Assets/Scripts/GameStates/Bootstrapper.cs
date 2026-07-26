@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blocks;
-using Menus;
+using Cysharp.Threading.Tasks;
 using Pooling;
 using Tower_and_Camera;
 using UI;
@@ -13,11 +13,12 @@ namespace GameStates
     {
         [SerializeField] private PauseManager pauseManager;
         [SerializeField] private BlockSpawner blockSpawner;
-        [SerializeField] private BlockPool blockPool;
         [SerializeField] private TimerManager gameTimer;
         [SerializeField] private HeightManager scoreManager;
         [SerializeField] private MusicManager musicManager;
         [SerializeField] private HeightGoals heightGoals;
+        [SerializeField] private SpawnPoint spawnPoint;
+        [SerializeField] private CameraMover cameraMover;
 
         [SerializeField] private GameObject bigMenu;
         [SerializeField] private GameObject mainMenu;
@@ -37,6 +38,7 @@ namespace GameStates
             mainMenu.SetActive(true);
             foreach (var menu in otherMenus) menu.SetActive(false);
             foreach (var subMenu in otherSubMenus) subMenu.SetActive(false);
+
             // while (true)
             // {
             //     GameObject existingBlock = blockPool.chil<BlockPlacement>().gameObject;
@@ -44,12 +46,28 @@ namespace GameStates
             //     Destroy(existingBlock);
             // }
         }
-        public void StartGame()
+        public async UniTaskVoid StartGame()
         {
             pauseManager.ResumeGame();
+            await UniTask.Yield(); 
+            
+            blockSpawner.DestroyAllBlocks();
+            await UniTask.Yield();
+            
             blockSpawner.StartGame();
+            await UniTask.Yield();
+            
             gameTimer.ResetTimer();
+            await UniTask.Yield();
+            
             scoreManager.ResetScore();
+            await UniTask.Yield();
+            
+            spawnPoint.ResetPosition();
+            cameraMover.ResetPosition();
+            await UniTask.Yield();
+            
+            heightGoals.ResetGoals();
             heightGoals.GenerateNextGoal();
         }
     }

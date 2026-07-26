@@ -9,10 +9,12 @@ namespace Tower_and_Camera
     public class CameraMover : MonoBehaviour
     {
         private CinemachineCamera _mainCamera;
-
+        private Vector3 _startPosition;
+        
         private void Awake()
         {
             _mainCamera = GetComponent<CinemachineCamera>();
+            _startPosition = transform.position;
         }
 
         private void ChangeFollowTarget(GameObject target)
@@ -20,7 +22,11 @@ namespace Tower_and_Camera
             _mainCamera.Target.TrackingTarget = target.transform;
         }
 
-
+        public void ResetPosition()
+        {
+            transform.position = _startPosition;
+        }
+        
         private void OnEnable()
         {
             SpawnEventChannel.SpawnBlock += ChangeFollowTarget;

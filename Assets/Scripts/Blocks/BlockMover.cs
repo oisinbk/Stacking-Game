@@ -17,8 +17,8 @@ namespace Blocks
 
         [Header("Movement Settings")]
         [SerializeField] private float moveSpeed = 10f;
-        [SerializeField] private float moveStartDelay = 0.2f;
-        [SerializeField] private float moveEndDelay = 0.2f;
+        //[SerializeField] private float moveStartDelay = 0.2f;
+        //[SerializeField] private float moveEndDelay = 0.2f;
 
         [Header("Rotation Settings")]
         [SerializeField] private float rotSpeed = 5f;
@@ -81,7 +81,7 @@ namespace Blocks
 
         private void FixedUpdate()
         {
-            if (_rb == null) return;
+            if (_rb == null || _droppedBlock) return;
             MoveBlock();
             RotateBLock();
             
@@ -114,16 +114,18 @@ namespace Blocks
         {
             Vector3 targetVelocity = new Vector3(_moveInput.x, _moveInput.y, 0f) * moveSpeed;
             // Apply X/Y movement
-            if (_moveInput != Vector2.zero)
-            {
-                _rb.linearVelocity = 
-                    Vector3.Lerp(_rb.linearVelocity, targetVelocity, moveStartDelay * Time.fixedDeltaTime); 
-            }
-            else
-            {
-                _rb.linearVelocity = 
-                    Vector3.Lerp(_rb.linearVelocity, Vector3.zero, moveEndDelay * Time.fixedDeltaTime); 
-            }
+            _rb.linearVelocity = targetVelocity;
+            
+            // if (_moveInput != Vector2.zero)
+            // {
+            //     _rb.linearVelocity = 
+            //         Vector3.Lerp(_rb.linearVelocity, targetVelocity, moveStartDelay * Time.fixedDeltaTime); 
+            // }
+            // else
+            // {
+            //     _rb.linearVelocity = 
+            //         Vector3.Lerp(_rb.linearVelocity, Vector3.zero, moveEndDelay * Time.fixedDeltaTime); 
+            // }
         }
 
         private void RotateBLock()

@@ -19,6 +19,7 @@ namespace GameStates
             if (pause.action.triggered)
             {
                 _gameIsPaused = !_gameIsPaused;
+                pauseMenuVisuals.SetActive(_gameIsPaused);
                 PauseUnpauseGame(_gameIsPaused);
             }
         }
@@ -37,7 +38,6 @@ namespace GameStates
 
         private void PauseUnpauseGame(bool paused)
         {
-            pauseMenuVisuals.SetActive(paused);
             Time.timeScale = paused ? 0 : 1;
             foreach (var input in allPlayerInputs)
             {

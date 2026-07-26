@@ -17,7 +17,17 @@ namespace Blocks
 
         private void UpdateHeight(float height)
         {
-            Vector3.Lerp(transform.position, _originalPosition + heightManager.TowerTop, 1);
+            //Vector3.Lerp(transform.position, _originalPosition + heightManager.TowerTop, 1);
+            Vector3 newPos = _originalPosition + heightManager.TowerTop;
+            if (newPos.y > _originalPosition.y)
+            {
+                transform.position = newPos;
+            }
+        }
+
+        public void ResetPosition()
+        {
+            transform.position = _originalPosition;
         }
 
         private void OnEnable()
