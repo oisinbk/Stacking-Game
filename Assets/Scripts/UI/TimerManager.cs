@@ -1,4 +1,5 @@
 ﻿using System;
+using GameStates;
 using UnityEngine;
 
 namespace UI
@@ -6,6 +7,8 @@ namespace UI
     public class TimerManager : MonoBehaviour, ITimer
     {
         [SerializeField] private int startTime = 20;
+        [SerializeField] private int incrementedTime = 5;
+        [SerializeField] private GameOverEventChannel gameOverEventChannel;
         
         public float Timer => _timer;
         private float _timer;
@@ -28,7 +31,19 @@ namespace UI
 
         private void Update()
         {
-            _timer -= Time.deltaTime;
+            if (_timer > 0)
+            {
+                _timer -= Time.deltaTime;
+            }
+            else
+            {
+                gameOverEventChannel.RaiseEvent();
+            }
+        }
+
+        public void IncrementTimer()
+        {
+            _timer += incrementedTime;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Tower_and_Camera
         [SerializeField] private Vector3 towerBottom = new Vector3(0, 0.5f, 0);
         public float Score {get; private set;}
         
-        public Vector3 TowerTop => new Vector3(0, _towerHeight, 0);
+        public Vector3 TowerTop { get; private set;}
         private float _maxTowerHeight;
         private float _towerHeight;
 
@@ -18,6 +18,7 @@ namespace Tower_and_Camera
             {
                 _towerHeight = newHeight;
                 Score = (int)(_towerHeight - towerBottom.y);
+                TowerTop = Vector3.up * (_towerHeight - towerBottom.y);
             }
         }
 
