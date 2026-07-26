@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Blocks.Channels;
+using DebugTools;
 
 namespace Blocks
 {
@@ -89,6 +90,14 @@ namespace Blocks
         
         private void DropBlock()
         {
+            // #region agent log
+            AgentDebugLog.Write(
+                "BlockMover.cs:DropBlock",
+                "Player dropped block (Space)",
+                "D",
+                dataJson: $"{{\"blockName\":\"{_currentBlock?.name ?? "null"}\"}}");
+            // #endregion
+
             _rb.useGravity = true;
             _rb.centerOfMass = Vector3.down * stabilizeFactor; //this is calculated in local space
             _rb.mass = newMass;

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using DebugTools;
 using UnityEngine;
 
 namespace Pooling
@@ -22,9 +24,24 @@ namespace Pooling
 
         public T Get()
         {
+            // #region agent log
+            bool poolWasEmpty = _available.Count < 1;
+            // #endregion
             if (_available.Count < 1)
             {
+                // #region agent log
+                var expandSw = Stopwatch.StartNew();
+                int sizeBefore = size;
+                // #endregion
                 IncreasePool(increaseSize);
+                // #region agent log
+                expandSw.Stop();
+                AgentDebugLog.Write(
+                    "SimplePool.cs:Get:expand",
+                    "Pool expanded",
+                    "B",
+                    dataJson: $"{{\"expandMs\":{expandSw.ElapsedMilliseconds},\"sizeBefore\":{sizeBefore},\"sizeAfter\":{size},\"availableAfter\":{_available.Count}}}");
+                // #endregion
             }
             
             var pooledObject = _available.Pop();

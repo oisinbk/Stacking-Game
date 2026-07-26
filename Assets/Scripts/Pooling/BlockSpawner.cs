@@ -1,4 +1,6 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using System.Collections.Generic;
 using Blocks;
@@ -29,20 +31,43 @@ namespace Pooling
         private float _lastSpawnTime = -1f;
         
         private bool _firstBlock = true;
+        private bool _isWaitingToSpawn = false;
         
         public void StartGame()
         {
             _firstBlock = true;
             GenerateNewBlock();
-            _firstBlock = false;
         }
 
         private void RequestGenerateNewBlock()
         {
-            while (Time.unscaledTime - _lastSpawnTime < coolDownTime) { }
+            if(_isWaitingToSpawn) return;
+
+            SpawnAfterCooldownAsync().Forget();
+        }
+        
+        //TODO: the following function is from gemini, it might be gobbldygook
+        private async UniTaskVoid SpawnAfterCooldownAsync()
+        {
+            _isWaitingToSpawn = true;
+
+            float timeSinceLastSpawn = Time.unscaledTime - _lastSpawnTime;
+            
+            // If the cooldown hasn't finished, calculate the remaining time and await it.
+            if (timeSinceLastSpawn < coolDownTime)
+            {
+                float waitTime = coolDownTime - timeSinceLastSpawn;
+                
+                // ignoreTimeScale keeps it aligned with your Time.unscaledTime logic.
+                // The cancellation token ensures we don't try to spawn if the object is destroyed while waiting.
+                await UniTask.Delay(TimeSpan.FromSeconds(waitTime), 
+                    ignoreTimeScale: true, 
+                    cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
             
             GenerateNewBlock();
             _lastSpawnTime = Time.unscaledTime;
+            _isWaitingToSpawn = false;
         }
 
         private void GenerateNewBlock()
@@ -57,6 +82,7 @@ namespace Pooling
 
             AddComponents(dataForBlock, currentBlock);
             spawnEventChannel.RaiseEvent(currentBlock.gameObject);
+            _firstBlock = false;
         }
 
         private void AddComponents(BlockData selectedBlock, BlockPlacement currentBlockPlacement)
