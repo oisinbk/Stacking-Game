@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Menus.MainMenu
   bootstrapper: {fileID: 1363927018}
   pauseManager: {fileID: 273610347}
-  allMenu: {fileID: 539569233}
+  allMenu: {fileID: 24366123}
   mainMenuVisuals: {fileID: 49370435}
   settingsVisuals: {fileID: 1191287450}
   leaderboardVisuals: {fileID: 239620129}
@@ -6629,6 +6629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6599da96834fb5991a9b80641ed782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Blocks.SpawnPoint
+  heightManager: {fileID: 1134365214}
 --- !u!1 &1992114079
 GameObject:
   m_ObjectHideFlags: 0
