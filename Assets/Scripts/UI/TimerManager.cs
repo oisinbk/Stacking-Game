@@ -11,7 +11,7 @@ namespace UI
         [SerializeField] private GameOverEventChannel gameOverEventChannel;
         
         public float Timer => _timer;
-        private float _timer;
+        private float _timer = 5;
 
         public void ResetTimer()
         {
@@ -35,7 +35,7 @@ namespace UI
             {
                 _timer -= Time.deltaTime;
             }
-            else
+            else if (Time.timeScale != 0)
             {
                 gameOverEventChannel.RaiseEvent();
             }

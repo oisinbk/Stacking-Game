@@ -1228,7 +1228,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08199209, y: 0, z: 0, w: 0.996633}
-  m_LocalPosition: {x: 0, y: 4.3023205, z: -9.546205}
+  m_LocalPosition: {x: 0, y: 3.6896198, z: -10.187704}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2355,7 +2355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Blocks.BlockPlacement
   blockIsStableEventChannel: {fileID: 11400000, guid: 9d84651a58466b143bad5b60cd677a7f, type: 2}
-  requiredSettleTime: 0.5
+  requiredSettleTime: 0.2
   minVelocityThreshold: 0.01
 --- !u!64 &681938944
 MeshCollider:
@@ -3330,7 +3330,7 @@ Transform:
   m_GameObject: {fileID: 988588407}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08199209, y: -0, z: -0, w: 0.996633}
-  m_LocalPosition: {x: 0, y: 4.3023205, z: -9.546205}
+  m_LocalPosition: {x: 0, y: 3.6896198, z: -10.187704}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4713,6 +4713,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStates.Restart
   restartAction: {fileID: 7074382589737789827, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
+  pauseManager: {fileID: 273610347}
+  gameOverMenu: {fileID: 1826213744}
 --- !u!4 &1363927017
 Transform:
   m_ObjectHideFlags: 0
@@ -6608,7 +6610,7 @@ Transform:
   m_GameObject: {fileID: 1961184856}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0.54}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

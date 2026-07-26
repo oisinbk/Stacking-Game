@@ -6,9 +6,11 @@ namespace Tower_and_Camera
     public class HeightManager : MonoBehaviour
     {
         [SerializeField] private Vector3 towerBottom = new Vector3(0, 0.5f, 0);
-        public float Score {get; private set;}
+        public int Score {get; private set;}
         
         public Vector3 TowerTop { get; private set;}
+        public Vector3 TowerBottom => towerBottom;
+        
         private float _maxTowerHeight;
         private float _towerHeight;
 

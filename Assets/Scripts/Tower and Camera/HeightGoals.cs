@@ -27,7 +27,9 @@ namespace Tower_and_Camera
         {
             int height = GenerateNextGoalHeight(_currentGoalIndex);
             GameObject nextGoal = Instantiate(goalPrefab, transform);
-            nextGoal.transform.position = _currentGoal.transform.position + Vector3.up * height;
+            Vector3 prevPos = _currentGoal == null ? heightManager.TowerBottom : _currentGoal.transform.position;
+            
+            nextGoal.transform.position = prevPos + Vector3.up * height;
             _currentGoal = nextGoal;
             _currentGoalIndex++;
         }
@@ -36,7 +38,7 @@ namespace Tower_and_Camera
         {
             //just a function that made sense to me
             //x is the previous goal index
-            int height = x * x / 10 + 4 * x;
+            int height = x * x / 10 + 4 * x + 3;
             return height;
         }   
     }

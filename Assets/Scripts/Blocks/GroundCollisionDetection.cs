@@ -21,11 +21,13 @@ namespace Blocks
                 if (other.gameObject.CompareTag("Ground"))
                 {
                     _collidedWithFloor = true;
+                    Debug.Log("Detected collision with the ground");
                     gameOverChannel.RaiseEvent();
                 }
                 else if (other.gameObject.CompareTag("Stage") && !_isFirst)
                 {
                     _collidedWithFloor = true;
+                    Debug.Log("Detected collision with the ground");
                     gameOverChannel.RaiseEvent();
                 }
             }
