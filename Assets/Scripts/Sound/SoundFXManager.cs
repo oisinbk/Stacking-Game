@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Sound
 {
-    public class SoundFXManager : MonoBehaviour
+    public class SoundFXManager : MonoSingleton<SoundFXManager>
     {
         [SerializeField] private AudioObjectPool audioPool;
 

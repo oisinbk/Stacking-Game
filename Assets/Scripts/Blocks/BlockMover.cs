@@ -22,7 +22,7 @@ namespace Blocks
 
         [Header("Rotation Settings")]
         [SerializeField] private float rotSpeed = 5f;
-        [SerializeField] private float dropOffFactor = 0.5f;
+        //[SerializeField] private float dropOffFactor = 0.5f;
 
         [Header("Tower Stabilizers")]
         [Tooltip("lower the center of mass of the block by this factor")]
@@ -107,7 +107,7 @@ namespace Blocks
             _droppedBlock = true;
                 
             // Turn off the input listening for this specific block
-            blockDroppedEventChannel.RaiseEvent();
+            blockDroppedEventChannel.RaiseEvent(gameObject);
         }
         
         private void MoveBlock()
@@ -131,15 +131,17 @@ namespace Blocks
         private void RotateBLock()
         {
             // Apply Z rotation
-            if (_rotationInput != 0)
-            {
-                _rb.angularVelocity = new Vector3(0, 0, _rotationInput * rotSpeed);
-            }
-            else
-            {
-                _rb.angularVelocity =
-                    Vector3.Lerp(_rb.angularVelocity, Vector3.zero, dropOffFactor * Time.fixedDeltaTime);
-            }
+            _rb.angularVelocity = new Vector3(0, 0, _rotationInput * rotSpeed);
+            
+            // if (_rotationInput != 0)
+            // {
+            //     _rb.angularVelocity = new Vector3(0, 0, _rotationInput * rotSpeed);
+            // }
+            // else
+            // {
+            //     _rb.angularVelocity =
+            //         Vector3.Lerp(_rb.angularVelocity, Vector3.zero, dropOffFactor * Time.fixedDeltaTime);
+            // }
         }
 
         private void ClampBlockPosition()

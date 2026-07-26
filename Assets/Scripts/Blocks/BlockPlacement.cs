@@ -3,18 +3,22 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Pooling;
 using Blocks.Channels;
+using Sound;
+using System.Collections.Generic;
 
 namespace Blocks
 {
-    [RequireComponent(typeof(MeshCollider), typeof(Rigidbody), typeof(GroundCollisionDetection))]
+    [RequireComponent(typeof(Rigidbody), typeof(GroundCollisionDetection))]
     public class BlockPlacement : MonoBehaviour, IPoolable
     {
         [SerializeField] private BlockIsStableEventChannel blockIsStableEventChannel;
         
         [Header("Settle Settings")]
-        [SerializeField] float requiredSettleTime = 0.5f;
+        [SerializeField] float requiredSettleTime = 0.2f;
         [Tooltip("minimum amount of velocity to register movement")]
         [SerializeField] float minVelocityThreshold = 0.01f;
+        
+        [SerializeField] List<AudioClip> blockSounds;
         
         private bool _blockIsStationary;
         private bool _isAlreadyChecking;
@@ -34,6 +38,7 @@ namespace Blocks
         
         private void OnCollisionEnter(Collision other)
         {
+            SoundFXManager.Instance.PlayRandomSoundFXClip(blockSounds, transform, 1);
             if ((other.gameObject.CompareTag("Block") || other.gameObject.CompareTag("Stage"))
                 && !_blockIsStationary
                 && !_isAlreadyChecking)

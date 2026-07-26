@@ -9,13 +9,12 @@ using UnityEngine.InputSystem;
 
 namespace Pooling
 {
-    [Serializable]
-    public class BlockData
-    {
-        public Mesh blockMesh;
-        public Vector3 blockScale = Vector3.one;
-        public Material blockMaterial;
-    }
+    // [Serializable]
+    // public class BlockData
+    // {
+    //     public Mesh blockMesh;
+    //     public Material blockMaterial;
+    // }
     
     public class BlockSpawner : MonoBehaviour
     {
@@ -24,8 +23,7 @@ namespace Pooling
         
         [SerializeField] private Transform spawnLocation;
         
-        [SerializeField] private BlockPlacement blockPrefab;
-        [SerializeField] private List<BlockData> legalObjects;
+        [SerializeField] private List<GameObject> legalObjects;
         
         [SerializeField] private float coolDownTime = 1f;
         private float _lastSpawnTime = -1f;
@@ -48,14 +46,13 @@ namespace Pooling
             }
         }
         
-        private void RequestGenerateNewBlock()
+        private void RequestGenerateNewBlock(GameObject prevBlock)
         {
             if(_isWaitingToSpawn) return;
 
             SpawnAfterCooldownAsync().Forget();
         }
         
-        //TODO: the following function is from gemini, it might be gobbldygook
         private async UniTaskVoid SpawnAfterCooldownAsync()
         {
             _isWaitingToSpawn = true;
@@ -83,51 +80,25 @@ namespace Pooling
         {
             Debug.Log("Generating new block");
             if (legalObjects == null || legalObjects.Count == 0) return;
-            int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
-            BlockData dataForBlock = legalObjects[randomIndex];
             
-            BlockPlacement currentBlock = Instantiate(blockPrefab, transform);
+            int randomIndex = UnityEngine.Random.Range(0, legalObjects.Count);
+            
+            GameObject currentBlock = Instantiate(legalObjects[randomIndex], transform);
             currentBlock.transform.position = spawnLocation.transform.position;
 
-            AddComponents(dataForBlock, currentBlock);
-            currentBlock.gameObject.SetActive(true);
+            AddComponents(currentBlock);
+            currentBlock.SetActive(true);
             spawnEventChannel.RaiseEvent(currentBlock.gameObject);
             _firstBlock = false;
         }
 
-        private void AddComponents(BlockData selectedBlock, BlockPlacement currentBlockPlacement)
+        private void AddComponents(GameObject currentBlock)
         {
-            if (!currentBlockPlacement.TryGetComponent(out GroundCollisionDetection groundCollision))
+            if (!currentBlock.TryGetComponent(out GroundCollisionDetection groundCollision))
             {
-                groundCollision = currentBlockPlacement.gameObject.AddComponent<GroundCollisionDetection>();
+                groundCollision = currentBlock.gameObject.AddComponent<GroundCollisionDetection>();
             }
             groundCollision.SetProperties(_firstBlock);
-            
-            if (!currentBlockPlacement.TryGetComponent(out MeshFilter meshFilter))
-            {
-                meshFilter = currentBlockPlacement.gameObject.AddComponent<MeshFilter>();
-            }
-            meshFilter.sharedMesh = selectedBlock.blockMesh;
-
-            if (!currentBlockPlacement.TryGetComponent(out MeshRenderer meshRenderer))
-            {
-                meshRenderer = currentBlockPlacement.gameObject.AddComponent<MeshRenderer>();
-            }
-            meshRenderer.sharedMaterial = selectedBlock.blockMaterial;
-            
-            if (!currentBlockPlacement.TryGetComponent(out MeshCollider meshCollider))
-            {
-                meshCollider = currentBlockPlacement.gameObject.AddComponent<MeshCollider>();
-            }
-            
-            Vector3 appliedScale = selectedBlock.blockScale;
-            if (appliedScale.x == 0) appliedScale.x = 1f;
-            if (appliedScale.y == 0) appliedScale.y = 1f;
-            if (appliedScale.z == 0) appliedScale.z = 1f;
-            
-            currentBlockPlacement.transform.localScale = appliedScale;
-            meshCollider.sharedMesh = selectedBlock.blockMesh;
-            meshCollider.convex = true;
         }
         
         private void OnEnable()
