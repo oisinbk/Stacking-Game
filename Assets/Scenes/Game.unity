@@ -134,7 +134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &24366124
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1226,8 +1226,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.028651321, y: -0, z: -0, w: 0.9995895}
-  m_LocalPosition: {x: 0, y: 1.74, z: -10.05}
+  m_LocalRotation: {x: 0.08199209, y: 0, z: 0, w: 0.996633}
+  m_LocalPosition: {x: 0, y: 4.3023205, z: -9.546205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2354,6 +2354,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Blocks.BlockPlacement
   blockIsStableEventChannel: {fileID: 11400000, guid: 9d84651a58466b143bad5b60cd677a7f, type: 2}
+  requiredSettleTime: 0.5
+  minVelocityThreshold: 0.01
 --- !u!64 &681938944
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3317,7 +3319,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &988588408
 Transform:
   m_ObjectHideFlags: 0
@@ -3327,7 +3329,7 @@ Transform:
   m_GameObject: {fileID: 988588407}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08199209, y: -0, z: -0, w: 0.996633}
-  m_LocalPosition: {x: 0, y: 4.315141, z: -9.623596}
+  m_LocalPosition: {x: 0, y: 4.3023205, z: -9.546205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3616,6 +3618,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011122506}
   m_CullTransparentMesh: 1
+--- !u!1 &1054856160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1054856161}
+  - component: {fileID: 1054856162}
+  m_Layer: 0
+  m_Name: Height Goals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1054856161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054856160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1797862526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1054856162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054856160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b573fdb5ac3456a9b379fd783ab74f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tower_and_Camera.HeightGoals
+  heightManager: {fileID: 1134365214}
+  timerManager: {fileID: 2070647275}
+  goalPrefab: {fileID: 5446168160969693246, guid: aade6f576fd09ce42bcece98623335b7, type: 3}
 --- !u!1 &1127780086
 GameObject:
   m_ObjectHideFlags: 0
@@ -4664,8 +4713,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStates.Restart
   restartAction: {fileID: 7074382589737789827, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
-  pauseManager: {fileID: 0}
-  GameOverMenu: {fileID: 0}
 --- !u!4 &1363927017
 Transform:
   m_ObjectHideFlags: 0
@@ -4699,6 +4746,7 @@ MonoBehaviour:
   gameTimer: {fileID: 2070647275}
   scoreManager: {fileID: 1134365214}
   musicManager: {fileID: 699979560}
+  heightGoals: {fileID: 1054856162}
   bigMenu: {fileID: 24366123}
   mainMenu: {fileID: 49370435}
   otherMenus:
@@ -5990,6 +6038,7 @@ Transform:
   - {fileID: 330585546}
   - {fileID: 988588408}
   - {fileID: 2088341250}
+  - {fileID: 1054856161}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1826213744
@@ -6008,7 +6057,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1826213745
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6674,10 +6723,11 @@ MonoBehaviour:
   moveAction: {fileID: -8855312800255623051, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
   rotateAction: {fileID: 1323041084508504339, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
   dropAction: {fileID: -8537055466725046386, guid: a84af3ffa011730459b4e5cdafafc0f6, type: 3}
-  maxMoveSpeed: 5
-  moveSnappiness: 0
-  maxRotationSpeed: 5
-  rotationSnappiness: 0.1
+  moveSpeed: 10
+  moveStartDelay: 0.2
+  moveEndDelay: 0.2
+  rotSpeed: 5
+  dropOffFactor: 0.5
   stabilizeFactor: 0.5
   newMass: 20
   spawnPoint: {fileID: 1961184857}
@@ -6748,6 +6798,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Data.TimerManager
   startTime: 20
+  incrementedTime: 5
+  gameOverEventChannel: {fileID: 11400000, guid: 15e475e38e0a7c641acb96e15b98c1a9, type: 2}
 --- !u!1 &2088341247
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ namespace Tower_and_Camera
         [SerializeField] private TimerManager timerManager;
         [SerializeField] private Goal goalPrefab;
         
-        private int _currentGoalIndex;
+        private int _currentGoalIndex = 1;
         private Goal _currentGoal;
 
         private void Update()
@@ -18,6 +18,7 @@ namespace Tower_and_Camera
             if (heightManager.TowerTop.y >= _currentGoal.transform.position.y)
             {
                 timerManager.IncrementTimer();
+                GenerateNextGoal();
             }
         }
 

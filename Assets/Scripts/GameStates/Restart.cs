@@ -9,8 +9,12 @@ namespace GameStates
     public class Restart : MonoBehaviour
     {
         [SerializeField] private InputActionReference restartAction;
-        [SerializeField] private PauseManager pauseManager;
-        [SerializeField] private GameObject GameOverMenu;
+        private Bootstrapper _bootstrapper;
+
+        private void Awake()
+        {
+            _bootstrapper = GetComponent<Bootstrapper>();
+        }
 
         private void Update()
         {
@@ -28,8 +32,7 @@ namespace GameStates
 
         private void GameOver()
         {
-            pauseManager.PauseGame();
-            GameOverMenu.SetActive(true);
+            _bootstrapper.ReturnToMainMenu();
         }
         
         private void OnEnable()

@@ -17,6 +17,7 @@ namespace GameStates
         [SerializeField] private TimerManager gameTimer;
         [SerializeField] private HeightManager scoreManager;
         [SerializeField] private MusicManager musicManager;
+        [SerializeField] private HeightGoals heightGoals;
 
         [SerializeField] private GameObject bigMenu;
         [SerializeField] private GameObject mainMenu;
@@ -49,6 +50,7 @@ namespace GameStates
             blockSpawner.StartGame();
             gameTimer.ResetTimer();
             scoreManager.ResetScore();
+            heightGoals.GenerateNextGoal();
         }
     }
 }
